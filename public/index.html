@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basketball Check-In</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>🏀 Team Check-In</h1>
+    <div class="date-badge" id="dateBadge"></div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Not Checked In</h2>
+        <span class="count" id="notInCount"></span>
+      </div>
+      <div class="grid" id="notInGrid"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Checked In</h2>
+        <span class="count" id="inCount"></span>
+      </div>
+      <ul class="checkin-list" id="checkinList"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <button id="manageBtn" class="link-btn">Manage Roster</button>
+    <button id="historyBtn" class="link-btn">Attendance History</button>
+  </footer>
+
+  <!-- Manage Roster Modal -->
+  <div class="modal-backdrop" id="manageModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Manage Roster</h2>
+        <button class="close-btn" data-close="manageModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="addPlayerForm" class="inline-form">
+          <input type="text" id="newPlayerName" placeholder="Player name" required />
+          <button type="submit">Add</button>
+        </form>
+
+        <details class="bulk-add">
+          <summary>Paste a full roster (one name per line)</summary>
+          <textarea id="bulkNames" rows="6" placeholder="Jordan Smith&#10;Alex Lee&#10;Sam Patel"></textarea>
+          <button id="bulkAddBtn">Add All</button>
+        </details>
+
+        <ul class="roster-list" id="rosterList"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Modal -->
+  <div class="modal-backdrop" id="historyModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Attendance History</h2>
+        <button class="close-btn" data-close="historyModal">&times;</button>
+      </div>
+      <div class="modal-body history-body">
+        <div class="history-sessions" id="historySessions"></div>
+        <div class="history-detail" id="historyDetail">
+          <p class="muted">Select a date to view details.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
