@@ -338,6 +338,38 @@ footer {
   color: var(--gray);
 }
 
+.muted.small {
+  font-size: 0.85rem;
+  margin: 8px 0;
+}
+
+.storage-warning {
+  background: #fdecea;
+  color: #a12622;
+  border-bottom: 1px solid #f5c2c0;
+  margin: 0;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.backup-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.file-btn {
+  background: var(--orange);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-block;
+}
+
 .history-detail ul {
   list-style: none;
   margin: 0;

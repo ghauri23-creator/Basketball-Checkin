@@ -2,15 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Basketball Check-In</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Installable as a home-screen app; all data stays on this device -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#1d1d1d" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Check-In" />
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+  <link rel="icon" href="icons/icon-192.png" />
 </head>
 <body>
   <header>
     <h1>🏀 Team Check-In</h1>
     <div class="date-badge" id="dateBadge"></div>
   </header>
+
+  <p class="storage-warning" id="storageWarning" hidden>
+    Could not save — this browser's storage may be full or private browsing may be blocking it.
+    Your last action was not recorded.
+  </p>
 
   <main>
     <section class="panel">
@@ -55,6 +70,22 @@
         </details>
 
         <ul class="roster-list" id="rosterList"></ul>
+
+        <details class="bulk-add">
+          <summary>Backup / restore this device's data</summary>
+          <p class="muted small">
+            All data is stored only in this browser. Export a backup file
+            occasionally, especially before clearing Safari data or switching
+            devices.
+          </p>
+          <div class="backup-actions">
+            <button id="exportBtn" type="button">Export Backup</button>
+            <label class="file-btn">
+              Import Backup
+              <input type="file" id="importInput" accept="application/json" hidden />
+            </label>
+          </div>
+        </details>
       </div>
     </div>
   </div>
