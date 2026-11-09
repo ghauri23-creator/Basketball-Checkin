@@ -225,6 +225,33 @@ function removePlayer(playerId) {
   render();
 }
 
+function buildAttendanceEmail(dateKey) {
+  const db = loadDB();
+  const session = getOrCreateSession(db, dateKey);
+  const activePlayers = db.players.filter(p => p.active);
+  const checkedInIds = new Set(session.checkins.map(c => c.playerId));
+  const timesById = Object.fromEntries(session.checkins.map(c => [c.playerId, c.time]));
+  const present = activePlayers
+    .filter(p => checkedInIds.has(p.id))
+    .sort((a, b) => timesById[a.id].localeCompare(timesById[b.id]));
+  const absent = activePlayers
+    .filter(p => !checkedInIds.has(p.id))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  const dateLabel = fmtDate(dateKey);
+  const lines = [];
+  lines.push(`Present (${present.length}):`);
+  lines.push(...(present.length ? present.map(p => `  ${p.name} — ${fmtTime(timesById[p.id])}`) : ['  (none)']));
+  lines.push('');
+  lines.push(`Not checked in (${absent.length}):`);
+  lines.push(...(absent.length ? absent.map(p => `  ${p.name}`) : ['  (none)']));
+
+  return {
+    subject: `Team Attendance — ${dateLabel}`,
+    body: lines.join('\n'),
+  };
+}
+
 // --- Modals ---
 function openModal(id) {
   document.getElementById(id).classList.add('open');
@@ -260,6 +287,16 @@ resetDayBtn.addEventListener('click', () => {
   session.checkins = [];
   saveDB(db);
   render();
+});
+
+document.getElementById('adminBtn').addEventListener('click', () => {
+  document.getElementById('adminDateLabel').textContent = fmtDate(viewDate);
+  openModal('adminModal');
+});
+
+document.getElementById('emailAttendanceBtn').addEventListener('click', () => {
+  const { subject, body } = buildAttendanceEmail(viewDate);
+  window.location.href = `mailto:jetmag23@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 });
 
 document.getElementById('manageBtn').addEventListener('click', () => openModal('manageModal'));

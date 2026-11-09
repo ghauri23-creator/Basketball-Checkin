@@ -59,6 +59,7 @@
   <footer>
     <button id="manageBtn" class="link-btn">Manage Roster</button>
     <button id="historyBtn" class="link-btn">Attendance History</button>
+    <button id="adminBtn" class="link-btn">Admin</button>
   </footer>
 
   <!-- Manage Roster Modal -->
@@ -97,6 +98,25 @@
             </label>
           </div>
         </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Modal -->
+  <div class="modal-backdrop" id="adminModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Admin</h2>
+        <button class="close-btn" data-close="adminModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="muted small">
+          Emails the attendance list for the day currently shown on screen
+          (<strong id="adminDateLabel"></strong>) to
+          <strong>jetmag23@gmail.com</strong>. This opens your mail app with
+          the message pre-filled — review it and tap Send yourself.
+        </p>
+        <button id="emailAttendanceBtn" class="file-btn" type="button">Email Day's Attendance</button>
       </div>
     </div>
   </div>
