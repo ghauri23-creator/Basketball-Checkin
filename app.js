@@ -11,6 +11,7 @@ const prevDayBtn = document.getElementById('prevDayBtn');
 const nextDayBtn = document.getElementById('nextDayBtn');
 const todayBtn = document.getElementById('todayBtn');
 const viewDateInput = document.getElementById('viewDateInput');
+const resetDayBtn = document.getElementById('resetDayBtn');
 
 function fmtTime(iso) {
   return new Date(iso).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
@@ -122,6 +123,7 @@ function render() {
   viewDateInput.max = todayKey();
   nextDayBtn.disabled = !(dateKey < todayKey());
   todayBtn.hidden = isToday;
+  resetDayBtn.hidden = session.checkins.length === 0;
 
   const activePlayers = db.players.filter(p => p.active);
   const checkedInIds = new Set(session.checkins.map(c => c.playerId));
@@ -247,6 +249,16 @@ todayBtn.addEventListener('click', () => {
 viewDateInput.addEventListener('change', () => {
   if (!viewDateInput.value) return;
   viewDate = viewDateInput.value;
+  render();
+});
+resetDayBtn.addEventListener('click', () => {
+  const db = loadDB();
+  const session = getOrCreateSession(db, viewDate);
+  if (session.checkins.length === 0) return;
+  const ok = confirm(`Reset all check-ins for ${fmtDate(viewDate)}? This clears everyone's check-in time for this day only and cannot be undone.`);
+  if (!ok) return;
+  session.checkins = [];
+  saveDB(db);
   render();
 });
 

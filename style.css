@@ -130,6 +130,27 @@ main {
   font-size: 0.9rem;
 }
 
+.panel-header-right {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.reset-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: #d1495b;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.reset-btn:hover {
+  border-color: #d1495b;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
