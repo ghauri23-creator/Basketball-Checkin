@@ -7,6 +7,10 @@ const notInCount = document.getElementById('notInCount');
 const inCount = document.getElementById('inCount');
 const rosterList = document.getElementById('rosterList');
 const storageWarning = document.getElementById('storageWarning');
+const prevDayBtn = document.getElementById('prevDayBtn');
+const nextDayBtn = document.getElementById('nextDayBtn');
+const todayBtn = document.getElementById('todayBtn');
+const viewDateInput = document.getElementById('viewDateInput');
 
 function fmtTime(iso) {
   return new Date(iso).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
@@ -25,13 +29,27 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-function todayKey() {
-  const d = new Date();
+function dateToKey(d) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
   return `${y}-${m}-${day}`;
 }
+
+function todayKey() {
+  return dateToKey(new Date());
+}
+
+function shiftDateKey(key, days) {
+  const [y, m, d] = key.split('-').map(Number);
+  const dt = new Date(y, m - 1, d);
+  dt.setDate(dt.getDate() + days);
+  return dateToKey(dt);
+}
+
+// The date currently shown on the main screen — defaults to today, but can
+// be moved to any past date to check in or correct an earlier session.
+let viewDate = todayKey();
 
 // --- Storage (all data lives in this browser's localStorage) ---
 
@@ -95,9 +113,15 @@ function uid() {
 
 function render() {
   const db = loadDB();
-  const dateKey = todayKey();
+  const dateKey = viewDate;
   const session = getOrCreateSession(db, dateKey);
+  const isToday = dateKey === todayKey();
   dateBadge.textContent = fmtDate(dateKey);
+  dateBadge.classList.toggle('past', !isToday);
+  viewDateInput.value = dateKey;
+  viewDateInput.max = todayKey();
+  nextDayBtn.disabled = !(dateKey < todayKey());
+  todayBtn.hidden = isToday;
 
   const activePlayers = db.players.filter(p => p.active);
   const checkedInIds = new Set(session.checkins.map(c => c.playerId));
@@ -158,7 +182,7 @@ function renderRosterList(players) {
 
 function checkIn(playerId) {
   const db = loadDB();
-  const session = getOrCreateSession(db, todayKey());
+  const session = getOrCreateSession(db, viewDate);
   if (session.checkins.some(c => c.playerId === playerId)) return;
   session.checkins.push({ playerId, time: new Date().toISOString() });
   saveDB(db);
@@ -167,7 +191,7 @@ function checkIn(playerId) {
 
 function undoCheckIn(playerId) {
   const db = loadDB();
-  const session = getOrCreateSession(db, todayKey());
+  const session = getOrCreateSession(db, viewDate);
   session.checkins = session.checkins.filter(c => c.playerId !== playerId);
   saveDB(db);
   render();
@@ -206,6 +230,25 @@ function openModal(id) {
 function closeModal(id) {
   document.getElementById(id).classList.remove('open');
 }
+
+prevDayBtn.addEventListener('click', () => {
+  viewDate = shiftDateKey(viewDate, -1);
+  render();
+});
+nextDayBtn.addEventListener('click', () => {
+  if (nextDayBtn.disabled) return;
+  viewDate = shiftDateKey(viewDate, 1);
+  render();
+});
+todayBtn.addEventListener('click', () => {
+  viewDate = todayKey();
+  render();
+});
+viewDateInput.addEventListener('change', () => {
+  if (!viewDateInput.value) return;
+  viewDate = viewDateInput.value;
+  render();
+});
 
 document.getElementById('manageBtn').addEventListener('click', () => openModal('manageModal'));
 document.getElementById('historyBtn').addEventListener('click', () => {

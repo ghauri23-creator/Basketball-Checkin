@@ -19,7 +19,15 @@
 <body>
   <header>
     <h1>🏀 Team Check-In</h1>
-    <div class="date-badge" id="dateBadge"></div>
+    <div class="date-nav">
+      <button id="prevDayBtn" class="date-arrow" type="button" aria-label="Previous day">‹</button>
+      <div class="date-badge-wrap">
+        <div class="date-badge" id="dateBadge"></div>
+        <input type="date" id="viewDateInput" class="date-input-overlay" aria-label="Choose a date" />
+      </div>
+      <button id="nextDayBtn" class="date-arrow" type="button" aria-label="Next day">›</button>
+      <button id="todayBtn" class="link-btn today-btn" type="button" hidden>Today</button>
+    </div>
   </header>
 
   <p class="storage-warning" id="storageWarning" hidden>
