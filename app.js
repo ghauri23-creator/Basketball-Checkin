@@ -37,14 +37,33 @@ function todayKey() {
 
 let dbCache = null;
 
+function initialDB() {
+  const names = [
+    'Jenna Elmasry #3',
+    'Enaya Hasan #7',
+    'Suhayla Abdusshaheed #13',
+    'Marium Ghauri #11',
+    'Aila Malik #12',
+    'Duaa Shahid #10',
+    'Zehra Turan #19',
+    'Zaara Ghauri #14',
+    'Jena Abdullah #18',
+    'Amal Memon #29',
+  ];
+  return {
+    players: names.map(name => ({ id: uid(), name, active: true })),
+    sessions: {},
+  };
+}
+
 function loadDB() {
   if (dbCache) return dbCache;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    dbCache = raw ? JSON.parse(raw) : { players: [], sessions: {} };
+    dbCache = raw ? JSON.parse(raw) : initialDB();
   } catch (e) {
     console.error('Failed to read local storage, starting fresh.', e);
-    dbCache = { players: [], sessions: {} };
+    dbCache = initialDB();
   }
   return dbCache;
 }
